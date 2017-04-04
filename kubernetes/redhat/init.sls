@@ -8,6 +8,8 @@
 disable-selinux:
   cmd.run:
     - name: setenforce 0
+    - check_cmd:
+      - /bin/true
 
 redhat-kubernetes-tools:
   pkg.installed:
