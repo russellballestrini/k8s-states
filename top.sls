@@ -10,6 +10,6 @@ base:
   #  - blah
     
   # Kubernetes Master Node.  
-  #'roles:master':
-  #  - match: grain
-  #  - blah
+  'roles:master':
+    - match: grain
+    - kubernetes.master
