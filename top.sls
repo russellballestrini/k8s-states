@@ -2,7 +2,6 @@ base:
 
   '*':
     - ntp
-    - docker
     - kubernetes
     
   # Kubernetes Minion Node.  
