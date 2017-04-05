@@ -14,7 +14,14 @@ master-create-bootstrap-token-piller:
     - onchanges:
       - cmd: master-kubeadm-init
 
-
+master-setup-weave-overlay-network:
+  cmd.wait:
+    - name: |
+        export KUBECONFIG=/etc/kubernetes/admin.conf
+        kubectl apply -f https://git.io/weave-kube-1.6
+    - unless: export KUBECONFIG=/etc/kubernetes/admin.conf && kubectl get pods --namespace=kube-system | grep weave
+    - watch:
+      - cmd: master-kubeadm-init
 
  #should we make centos user have the ability to talk to kubernetes cluster?
 # should we assume root and configure this to run in bash_rc?:
