@@ -19,4 +19,5 @@ kubernetes-packages:
       - kubeadm
       - kubectl
       - kubernetes-cni
-
+    - requires:
+      - file: /etc/yum.repos.d/kubernetes.repo
