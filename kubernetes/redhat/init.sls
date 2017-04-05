@@ -11,7 +11,7 @@ disable-selinux:
     - check_cmd:
       - /bin/true
 
-redhat-kubernetes-tools:
+kubernetes-packages:
   pkg.installed:
     - names:
       - docker
@@ -20,14 +20,3 @@ redhat-kubernetes-tools:
       - kubectl
       - kubernetes-cni
 
-docker:
-  service.running:
-    - enable: True
-    - watch:
-      - pkg: redhat-kubernetes-tools
-
-kubelet:
-  service.running:
-    - enable: True
-    - watch:
-      - pkg: redhat-kubernetes-tools

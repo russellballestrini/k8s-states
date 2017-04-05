@@ -15,3 +15,15 @@ include:
     - watch: 
       - file: /etc/sysctl.d/kube-sysctl.conf
 
+docker:
+  service.running:
+    - enable: True
+    - watch:
+      - pkg: kubernetes-packages
+
+kubelet:
+  service.running:
+    - enable: True
+    - watch:
+      - pkg: kubernetes-packages
+
