@@ -5,11 +5,11 @@ base:
     - kubernetes
     
   # Kubernetes Minion Node.  
-  #'roles:minion':
-  #  - match: grain
-  #  - blah
+  'role:minion':
+    - match: grain
+    - kubernetes.minion
     
   # Kubernetes Master Node.  
-  'roles:master':
+  'role:master':
     - match: grain
     - kubernetes.master

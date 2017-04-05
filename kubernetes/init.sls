@@ -10,7 +10,7 @@ include:
   file.managed:
     - source: salt://kubernetes/kube-sysctl.conf
     - mode: 0640
-  cmd.run:
+  cmd.wait:
     - name: sysctl --system
     - watch: 
       - file: /etc/sysctl.d/kube-sysctl.conf
