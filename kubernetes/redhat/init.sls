@@ -21,3 +21,19 @@ kubernetes-packages:
       - kubernetes-cni
     - requires:
       - file: /etc/yum.repos.d/kubernetes.repo
+
+# reference: https://github.com/kubernetes/kubernetes/issues/43805
+hotifx-kubernetes-github-issue-43805:
+  file.line:
+    - name: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+    - content: Environment="KUBELET_NETWORK_ARGS=--cgroup-driver=systemd --network-plugin=cni --cni-conf-dir=/etc/cni/net.d --cni-bin-dir=/opt/cni/bin"
+    - match: Environment="KUBELET_NETWORK_ARGS=
+    - mode: replace
+    - require:
+      - pkg: kubernetes-packages
+    - require_in:
+      - service: kubelet 
+  cmd.wait:
+    - name: systemctl daemon-reload
+    - watch:
+      - file: hotifx-kubernetes-github-issue-43805
