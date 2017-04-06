@@ -26,4 +26,3 @@ kubelet:
     - enable: True
     - watch:
       - pkg: kubernetes-packages
-

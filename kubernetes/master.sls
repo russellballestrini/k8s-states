@@ -23,13 +23,13 @@ master-setup-weave-overlay-network:
     - watch:
       - cmd: master-kubeadm-init
 
- #should we make centos user have the ability to talk to kubernetes cluster?
-# should we assume root and configure this to run in bash_rc?:
-#
-#   export KUBECONFIG=/etc/kubernetes/admin.conf
-#  sudo cp /etc/kubernetes/admin.conf $HOME/
-#  sudo chown $(id -u):$(id -g) $HOME/admin.conf
-#  export KUBECONFIG=$HOME/admin.conf
-#
-# verify:
-# kubectl get pods --namespace=kube-system
+# teach root user about cluster certificates for access to kubeapi.
+# this allows kubectl to work.
+root-bash-profile-kube-certs:
+  file.line:
+    - name: /root/.bash_profile
+    - content: export KUBECONFIG=/etc/kubernetes/admin.conf
+    - mode: insert
+    - location: end
+    - require:
+      - pkg: kubernetes-packages

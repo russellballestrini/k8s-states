@@ -37,3 +37,9 @@ hotifx-kubernetes-github-issue-43805:
     - name: systemctl daemon-reload
     - watch:
       - file: hotifx-kubernetes-github-issue-43805
+
+# TODO: setup centos user to have access to kubectl?
+#
+#  sudo cp /etc/kubernetes/admin.conf $HOME/
+#  sudo chown $(id -u):$(id -g) $HOME/admin.conf
+#  export KUBECONFIG=$HOME/admin.conf
