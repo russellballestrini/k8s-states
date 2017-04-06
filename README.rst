@@ -1,4 +1,4 @@
 k8s-states
 #############
 
-Kubernetes SaltStack States for Centos on AWS
+Kubernetes SaltStack States for Linux on AWS
