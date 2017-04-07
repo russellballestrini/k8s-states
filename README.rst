@@ -6,7 +6,7 @@ Kubernetes on AWS with Botoform and SaltStack
 This project and guide provides automation for standing up a Kubernetes cluster on AWS using Botoform and SaltStack. As an example we will stand up a Selnium Grid cluster on top of Kubernetes.
 
 
-1. Install botoform (`Quickstart <https://botoform.readthedocs.io/en/latest/guides/quickstart.html>`)
+1. Install botoform (`Quickstart <https://botoform.readthedocs.io/en/latest/guides/quickstart.html>`_)
 
  * clone botoform repo
  * create virtual env
