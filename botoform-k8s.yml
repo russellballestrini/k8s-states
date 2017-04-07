@@ -209,6 +209,10 @@ instance_roles:
 
       # restart salt-minion agent to re-read configuration.
       service salt-minion restart
+      
+      # sleep until master node key is accepted into salt.
+      until salt-key -L | grep $(hostname) -C 9999; do echo -n . && sleep 1; done
+      sleep 5
 
       # Setup Kubernetes Master Node using SaltStack.
       salt '*' state.highstate
