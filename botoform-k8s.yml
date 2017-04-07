@@ -151,8 +151,7 @@ load_balancers:
     security_groups: ['minion-elb', 'selenium']
     subnets: ['public-1', 'public-2', 'public-3']
     listeners:
-      - [80, 80, 'tcp']
-      - [443, 443, 'tcp']
+      - [80, 31337, 'tcp']
 
 # define instance roles to create.
 instance_roles:
@@ -187,7 +186,7 @@ instance_roles:
       cat <<EOF >> /etc/salt/minion.d/custom.conf
       master: master
       grains:
-        role: master
+        role: k8s-master
       EOF
 
       # clone the k8s-states git repo.
@@ -200,7 +199,7 @@ instance_roles:
       cat <<EOF >> /srv/pillar/top.sls
       base:
         # Kubernetes Minion Node.
-        'role:minion':
+        'role:k8s-*':
           - match: grain
           - kubernetes.bootstrap-token
       EOF
@@ -237,7 +236,7 @@ instance_roles:
       cat <<EOF >> /etc/salt/minion.d/custom.conf
       master: master
       grains:
-        role: minion
+        role: k8s-minion
       EOF
 
       # restart salt-minion agent to re-read configuration.
