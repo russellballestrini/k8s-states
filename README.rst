@@ -92,7 +92,7 @@ When you are done with this example, or you just don't want this cluster anymore
  
   bf unlock testk8s
   
-2. Destroy VPC
+2. Destroy VPC:
 
 .. code-block:: bash
  
