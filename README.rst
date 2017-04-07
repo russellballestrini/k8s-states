@@ -23,7 +23,7 @@ Finally, when all the Kubernetes minion nodes are in the ``Ready`` state, we can
 
 1. Install and activate Botoform. Reference: (Botoform `Quickstart <https://botoform.readthedocs.io/en/latest/guides/quickstart.html>`_)
 
- .. code-block:: bash
+.. code-block:: bash
  
   wget -O - https://raw.githubusercontent.com/russellballestrini/botoform/master/botoform-bootstrap.sh | sh
   
@@ -32,17 +32,19 @@ Finally, when all the Kubernetes minion nodes are in the ``Ready`` state, we can
 
 2. Download the Botoform template for this project:
 
- wget https://github.com/russellballestrini/k8s-states/blob/master/botoform-k8s.yml -O $HOME/botoform-k8s.yml
+.. code-block:: bash
+
+ wget https://raw.githubusercontent.com/russellballestrini/k8s-states/master/botoform-k8s.yml -O $HOME/botoform-k8s.yml
 
 3. Create AWS resources with botoform, this step also provisions SaltStack:
 
- .. code-block:: bash
+.. code-block:: bash
  
   bf create testk8s -e 'vpc_cidr=192.168.56.0/24' $HOME/botoform-k8s.yml
 
 4. Connect to Salt/Kubernetes Master and verify it has come online properly.
 
- .. code-block:: bash
+.. code-block:: bash
   
   bf dump testk8s instance_roles``
   ssh-add testk8s-*
@@ -58,13 +60,13 @@ Finally, when all the Kubernetes minion nodes are in the ``Ready`` state, we can
 
 5. Scale up the minion autoscaling groups.
 
- .. code-block:: bash
+.. code-block:: bash
  
   # TODO: add a tool into botoform for adjusting autoscaling group desired counts.
 
 6. Wait for them to come online and report into Salt/Kubernetes master.
 
-  .. code-block:: bash
+ .. code-block:: bash
    
    kubectl get nodes 
 
@@ -86,12 +88,12 @@ When you are done with this example, or you just don't want this cluster anymore
 
 1. Unlock VPC:
 
- .. code-block:: bash
+.. code-block:: bash
  
   bf unlock testk8s
   
 2. Destroy VPC
 
- .. code-block:: bash
+.. code-block:: bash
  
   bf destroy testk8s
