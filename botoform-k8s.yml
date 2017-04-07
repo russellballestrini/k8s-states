@@ -141,7 +141,6 @@ security_groups:
 
   bastion:
     inbound:
-      # Mobiquity: Waltham Office Egress (Also VPN).
       - ['0.0.0.0/0',  'tcp',   22]
 
 # define a public ELB for webapp nodes.
