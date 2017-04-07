@@ -1,23 +1,27 @@
 k8s-states
 #############
 
-Kubernetes on AWS with Botoform and SaltStack
+Kubernetes on AWS with `Botoform <http://botoform.com>`_ and SaltStack
 
-This project and guide provides automation for standing up a Kubernetes cluster on AWS using Botoform and SaltStack. 
+This project and guide provides automation for standing up a Kubernetes cluster on AWS using `Botoform <http://botoform.com>`_ and SaltStack. 
 
 .. contents::
 
 Example
 ============
 
-In this example we use botoform to spin up AWS resources and provision SaltStack on the instances.
-Once SaltStack is ready, it will install Kubernetes on the master.
-Once the Kubernetes master is ready we can spin up one or many Kubernetes minion nodes using AWS Autoscaling.
+In this example we use `Botoform <http://botoform.com>`_ to spin up AWS resources and provision SaltStack on the instances.
+
+When SaltStack is ready, it will install Kubernetes on the master.
+
+When the Kubernetes master is ready we can spin up one or many Kubernetes minion nodes using AWS Autoscaling.
+
 When these instances report into SaltStack, it will install Kubernetes on the minions and join them to the cluster.
-Once all the Kubernetes minion nodes are in the ``Ready`` state, we can use ``kubectl`` to spin up Selenium hub and chrome-nodes.
+
+Finally, when all the Kubernetes minion nodes are in the ``Ready`` state, we can use ``kubectl`` to spin up Selenium hub and chrome-nodes.
 
 
-1. Install botoform (`Quickstart <https://botoform.readthedocs.io/en/latest/guides/quickstart.html>`_)
+1. Install Botoform (`Quickstart <https://botoform.readthedocs.io/en/latest/guides/quickstart.html>`_)
 
  * clone botoform repo
  * create virtual env
