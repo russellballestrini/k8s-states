@@ -65,11 +65,15 @@ Finally, when all the Kubernetes minion nodes are in the ``Ready`` state, we can
  
   # TODO: add a tool into botoform for adjusting autoscaling group desired counts.
 
-6. Wait for them to come online and report into Salt/Kubernetes master.
+6. Wait for them to come online and report into Salt/Kubernetes master as ``Ready``.
 
 .. code-block:: bash
    
-   kubectl get nodes 
+   # watch salt key for new minions.
+   watch 'salt-key -L'
+   
+   # watch kubectl for new kubernetes nodes.
+   watch 'kubectl get nodes'
 
 
 7. Launch containers (for example we show a Selenium Grid setup).
