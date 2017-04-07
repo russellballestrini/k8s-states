@@ -59,11 +59,22 @@ Finally, when all the Kubernetes minion nodes are in the ``Ready`` state, we can
   export KUBECONFIG=/etc/kubernetes/admin.conf
   kubectl get nodes
 
-5. Scale up the minion autoscaling groups.
+5. Back to the first terminal, scale up the minion autoscaling group.
 
 .. code-block:: bash
  
-  # TODO: add a tool into botoform for adjusting autoscaling group desired counts.
+  # TODO: create botoform tool for scaling ASG desired counts.
+  bf shell testk8s
+  
+.. code-block:: python
+
+  >>> evpc.autoscaling.get_related_autoscaling_group_names()
+  ['testk8s-minion']
+  >>> len(evpc.instances)
+  2
+  >>> evpc.autoscaling.scale_related_autoscaling_group('testk8s-minion', 5)
+  >>> len(evpc.instances)
+  7
 
 6. Wait for them to come online and report into Salt/Kubernetes master as ``Ready``.
 
