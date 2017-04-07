@@ -2,14 +2,18 @@ base:
 
   '*':
     - ntp
+    
+   # Kubernetes Instances.  
+  'role:k8s-*':
+    - match: grain   
     - kubernetes
     
   # Kubernetes Minion Node.  
-  'role:minion':
+  'role:k8s-minion':
     - match: grain
     - kubernetes.minion
     
   # Kubernetes Master Node.  
-  'role:master':
+  'role:k8s-master':
     - match: grain
     - kubernetes.master
