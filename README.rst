@@ -66,20 +66,20 @@ Finally, when all the Kubernetes minion nodes are in the ``Ready`` state, we can
 
 6. Wait for them to come online and report into Salt/Kubernetes master.
 
- .. code-block:: bash
+.. code-block:: bash
    
    kubectl get nodes 
 
 
 7. Launch containers (for example we show a Selenium Grid setup).
 
- * pull in notes from selenium blog post
- * pull in selenium grid example from kubenetes repo
- * show commands to run on master
+* pull in notes from selenium blog post
+* pull in selenium grid example from kubenetes repo
+* show commands to run on master
 
 8. Verify
 
- * show how to use the ELB to access to selenium grid "hub" service
+* show how to use the ELB to access to selenium grid "hub" service
  
 Example Teardown
 =========================
