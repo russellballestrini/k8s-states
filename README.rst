@@ -28,7 +28,7 @@ Finally, when all the Kubernetes minion nodes are in the ``Ready`` state, we can
   wget -O - https://raw.githubusercontent.com/russellballestrini/botoform/master/botoform-bootstrap.sh | sh
   
   # whenever you want to use the 'bf' tool, you need to activate it.
-  source $/HOME/botoform/env/bin/activate
+  source $HOME/botoform/env/bin/activate
 
 2. Download the Botoform template for this project:
 
