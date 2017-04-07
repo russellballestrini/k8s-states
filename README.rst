@@ -3,15 +3,23 @@ k8s-states
 
 Kubernetes on AWS with Botoform and SaltStack
 
-This project and guide provides automation for standing up a Kubernetes cluster on AWS using Botoform and SaltStack. As an example we will stand up a Selnium Grid cluster on top of Kubernetes.
+This project and guide provides automation for standing up a Kubernetes cluster on AWS using Botoform and SaltStack. 
+
+.. contents::
+
+Example
+============
+
+As an example we will stand up a Selnium Grid cluster on top of Kubernetes.
 
 
 1. Install botoform (`Quickstart <https://botoform.readthedocs.io/en/latest/guides/quickstart.html>`_)
 
  * clone botoform repo
  * create virtual env
- * install dependencies
+ * install botoform
  * configure ``~/.aws/config``
+ * verify access to ``bf`` tool
 
 2. Clone this repo:
 
@@ -63,3 +71,20 @@ This project and guide provides automation for standing up a Kubernetes cluster 
 8. Verify
 
  * show how to use the ELB to access to selenium grid "hub" service
+ 
+Example Teardown
+=========================
+
+When you are done with this example, or you just don't want this cluster anymore, you can run to following commands to completely terminate all AWS resources spun up in the previous section.
+
+1. Unlock VPC:
+
+ .. code-block:: bash
+ 
+  bf unlock testk8s
+  
+2. Destroy VPC
+
+ .. code-block:: bash
+ 
+  bf destroy testk8s
