@@ -46,7 +46,7 @@ Finally, when all the Kubernetes minion nodes are in the ``Ready`` state, we can
 
 .. code-block:: bash
   
-  bf dump testk8s instances
+  bf dump testk8s ansible_hosts
   ssh-add testk8s-*
   ssh -A centos@<bastion-eip>
   ssh <master-private-ip>
