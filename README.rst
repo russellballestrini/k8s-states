@@ -21,25 +21,24 @@ When these instances report into SaltStack, it will install Kubernetes on the mi
 Finally, when all the Kubernetes minion nodes are in the ``Ready`` state, we can use ``kubectl`` to spin up Selenium hub and chrome-nodes.
 
 
-1. Install Botoform (`Quickstart <https://botoform.readthedocs.io/en/latest/guides/quickstart.html>`_)
-
- * clone botoform repo
- * create virtual env
- * install botoform
- * configure ``~/.aws/config``
- * verify access to ``bf`` tool
-
-2. Clone this repo:
+1. Install and activate Botoform. Reference: (Botoform `Quickstart <https://botoform.readthedocs.io/en/latest/guides/quickstart.html>`_)
 
  .. code-block:: bash
  
-  git clone https://github.com/russellballestrini/k8s-states.git
+  wget -O - https://raw.githubusercontent.com/russellballestrini/botoform/master/botoform-bootstrap.sh | sh
+  
+  # whenever you want to use the 'bf' tool, you need to activate it.
+  source $/HOME/botoform/env/bin/acticate
+
+2. Download the Botoform template for this project:
+
+ wget https://github.com/russellballestrini/k8s-states/blob/master/botoform-k8s.yml -O $HOME/botoform-k8s.yml
 
 3. Create AWS resources with botoform, this step also provisions SaltStack:
 
  .. code-block:: bash
  
-  bf create testk8s -e 'vpc_cidr=192.168.56.0/24' k8s-states/botoform-k8s.yml
+  bf create testk8s -e 'vpc_cidr=192.168.56.0/24' $HOME/botoform-k8s.yml
 
 4. Connect to Salt/Kubernetes Master and verify it has come online properly.
 
