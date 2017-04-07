@@ -50,13 +50,13 @@ Finally, when all the Kubernetes minion nodes are in the ``Ready`` state, we can
   ssh-add testk8s-*
   ssh -A centos@<bastion-eip>
   ssh <master-private-ip>
-  sudo su -
+  
+  # you can watch cloud-init as it works.
   tail -f /var/log/cloud-init.log
-  # wait a bit, then test Salt, the master should join automatically.
-  salt-key -L
-  # wait a bit, then test Kubernetes.
-  kubectl get nodes 
+
   # when master is in "Ready" state, scale up minions.
+  export KUBECONFIG=/etc/kubernetes/admin.conf
+  kubectl get nodes
 
 5. Scale up the minion autoscaling groups.
 
