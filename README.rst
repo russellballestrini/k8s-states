@@ -41,13 +41,14 @@ Finally, when all the Kubernetes minion nodes are in the ``Ready`` state, we can
 .. code-block:: bash
  
   bf create testk8s -e 'vpc_cidr=192.168.56.0/24' $HOME/botoform-k8s.yml
+  bf dump testk8s instances
+  ssh-add testk8s-*
 
-4. Connect to Salt/Kubernetes Master and verify it has come online properly.
+
+4. In another terminal, connect to Salt/Kubernetes Master and verify it has come online properly.
 
 .. code-block:: bash
   
-  bf dump testk8s instances
-  ssh-add testk8s-*
   ssh -A centos@<bastion-eip>
   ssh <master-private-ip>
   
