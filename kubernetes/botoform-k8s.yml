@@ -1,0 +1,260 @@
+# CIDR block to create the VPC.
+# for example, when creating new vpc, use -e 'vpc_cidr=192.168.21.0/24'
+vpc_cidr: {{ vpc_cidr }}
+
+amis:
+  centos-7-hvm:
+    # US East (N. Virginia)
+    us-east-1: ami-2a2ab13d
+    # US West (Oregon)
+    us-west-2: ami-a413d9c4
+    # US West (N. California)
+    us-west-1: ami-11f8bb71
+    # Asia Pacific (Singapore)
+    ap-southeast-1: ami-88fd24eb
+
+route_tables:
+
+  private-1:
+    routes: []
+
+  private-2:
+    routes:
+    routes: []
+
+  private-3:
+    routes:
+    routes: []
+
+  public:
+    routes:
+      - ['0.0.0.0/0', 'internet_gateway']
+
+
+# Three are attached to the private route_table, and three to the public.
+# size of 28 which is a /28 CIDR (16 addresses).
+# size of 26 which is a /26 CIDR (64 addresses).
+# We round robin AZ letters if availability_zone is not defined.
+# Instances will launch into subnet with public IPs, if public is True.
+subnets:
+
+  private-1:
+    size: 28
+    route_table: private-1
+    description: private subnet 1
+
+  private-2:
+    size: 28
+    route_table: private-2
+    description: private subnet 2
+
+  private-3:
+    size: 28
+    route_table: private-3
+    description: private subnet 3
+
+  public-1:
+    size: 26
+    public: true
+    route_table: public
+    description: public subnet 1
+
+  public-2:
+    size: 26
+    public: true
+    route_table: public
+    description: public subnet 2
+
+  public-3:
+    size: 26
+    public: true
+    route_table: public
+    description: public subnet 3
+
+
+# DHCP Options Set
+dhcp_options:
+
+  # max. of 4 domain name servers can be given
+  domain-name-servers:
+    - AmazonProvidedDNS
+    - 8.8.8.8
+
+private_zone: True
+
+# security groups and rules.
+security_groups:
+
+  all:
+    inbound:
+      - ['bastion',   'tcp',   22]
+
+  # reference:
+  #   https://coreos.com/kubernetes/docs/latest/kubernetes-networking.html#port-allocation
+  master:
+    inbound:
+      # SaltStack master needs to accept inbound from minions.
+      - ['all', 'tcp',   '4505-4506']
+
+      # Kubernetes master API server needs to accept inbound from:
+      #   Worker Nodes, API Requests, and End-Users
+      - ['all', 'tcp',   443]
+      - ['all', 'tcp',   6443]
+
+      # etcd.
+      - ['master', 'tcp',   '2379-2380']
+      - ['minion', 'tcp',   '2379-2380']
+
+      # weave (only needed if using weave)
+      - ['minion',   'udp',   6783]
+      - ['minion',   'udp',   6784]
+      - ['minion',   'tcp',   6783]
+
+  # reference:
+  #   https://coreos.com/kubernetes/docs/latest/kubernetes-networking.html#port-allocation
+  minion:
+    inbound:
+      # intra-cluster communication (all ports 1-65535)
+      - ['master',   'tcp',  'all']
+      - ['minion',   'tcp',  'all']
+
+      # allow any minion-elb into the minion nodes over default kubernetes NodePort range.
+      # https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+      - ['minion-elb',   'tcp',  '30000-32767']
+
+      # flannel (only needed if using flannel)
+      - ['minion',   'udp',   8285]
+      - ['minion',   'udp',   8472]
+
+      # weave (only needed if using weave)
+      - ['minion',   'udp',   6783]
+      - ['minion',   'udp',   6784]
+
+  # you should not add any inbound rules to this security group.
+  minion-elb:
+    inbound: []
+
+  selenium:
+    inbound:
+      - ['0.0.0.0/0',   'tcp',  80]
+      - ['0.0.0.0/0',   'tcp',  443]
+
+  bastion:
+    inbound:
+      # Mobiquity: Waltham Office Egress (Also VPN).
+      - ['0.0.0.0/0',  'tcp',   22]
+
+# define a public ELB for webapp nodes.
+load_balancers:
+
+  selenium-hub:
+    instance_role: minion
+    security_groups: ['minion-elb', 'selenium']
+    subnets: ['public-1', 'public-2', 'public-3']
+    listeners:
+      - [80, 80, 'tcp']
+      - [443, 443, 'tcp']
+
+# define instance roles to create.
+instance_roles:
+
+  master:
+    description: Kubernetes Master
+    instance_profile_name: {{ vpc_name }}-master
+    instance_type: 't2.small'
+    ami: 'centos-7-hvm'
+    count: 1
+    security_groups: ['all', 'master']
+    subnets: ['public-1', 'public-2', 'public-3']
+    eip: true
+    source_dest_check: false
+    block_devices:
+      '/dev/sda1':
+        size: 50
+    userdata: |
+      #!/bin/bash
+
+      # install SaltStack Master and Minion agents.
+      wget -O - https://bootstrap.saltstack.com | sudo sh -s -- -M stable
+
+      # configure salt-master agent.
+      # put salt master into auto accept mode.
+      cat <<EOF >> /etc/salt/master.d/custom.conf
+      open_mode: True
+      auto_accept: True
+      EOF
+
+      # configure salt-minion agent.
+      cat <<EOF >> /etc/salt/minion.d/custom.conf
+      master: master
+      grains:
+        role: master
+      EOF
+
+      # clone the k8s-states git repo.
+      git clone https://github.com/russellballestrini/k8s-states.git /srv/salt
+
+      # configure base salt pillar.
+      mkdir -p /srv/pillar/kubernetes
+      touch /srv/pillar/kubernetes/bootstrap-token.sls
+
+      cat <<EOF >> /srv/pillar/top.sls
+      base:
+        # Kubernetes Minion Node.
+        'role:minion':
+          - match: grain
+          - kubernetes.bootstrap-token
+      EOF
+
+      # restart salt-master agent to re-read configuration.
+      service salt-master restart
+
+      # restart salt-minion agent to re-read configuration.
+      service salt-minion restart
+
+      # Setup Kubernetes Master Node using SaltStack.
+      salt '*' state.highstate
+
+  minion:
+    description: Kubernetes Node
+    instance_profile_name: {{ vpc_name }}-minion
+    instance_type: 'm3.medium'
+    ami: 'centos-7-hvm'
+    autoscaling: true
+    count: {{ minion_count | default(0) }}
+    security_groups: ['all', 'minion']
+    subnets: ['public-1', 'public-2', 'public-3']
+    source_dest_check: false
+    block_devices:
+      '/dev/sda1':
+        size: 50
+    userdata: |
+      #!/bin/bash
+
+      # install SaltStack Minion agent.
+      wget -O - https://bootstrap.saltstack.com | sudo sh -s -- stable
+
+      # configure salt-minion agent.
+      cat <<EOF >> /etc/salt/minion.d/custom.conf
+      master: master
+      grains:
+        role: minion
+      EOF
+
+      # restart salt-minion agent to re-read configuration.
+      service salt-minion restart
+
+      # Setup Kubernetes Minion Node using SaltStack.
+      salt-call state.highstate
+
+  bastion:
+    description: SSH on the edge of the network
+    instance_type: 't2.small'
+    ami: 'centos-7-hvm'
+    count: 1
+    security_groups: ['all', 'bastion']
+    subnets: ['public-1', 'public-2', 'public-3']
+    eip: true
+    block_devices:
+      '/dev/sda1':
+        size: 50
