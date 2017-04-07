@@ -10,7 +10,11 @@ This project and guide provides automation for standing up a Kubernetes cluster 
 Example
 ============
 
-As an example we will stand up a Selnium Grid cluster on top of Kubernetes.
+In this example we use botoform to spin up AWS resources and provision SaltStack on the instances.
+Once SaltStack is ready, it will install Kubernetes on the master.
+Once the Kubernetes master is ready we can spin up one or many Kubernetes minion nodes using AWS Autoscaling.
+When these instances report into SaltStack, it will install Kubernetes on the minions and join them to the cluster.
+Once all the Kubernetes minion nodes are in the ``Ready`` state, we can use ``kubectl`` to spin up Selenium hub and chrome-nodes.
 
 
 1. Install botoform (`Quickstart <https://botoform.readthedocs.io/en/latest/guides/quickstart.html>`_)
