@@ -3,7 +3,7 @@ k8s-states
 
 Kubernetes on AWS with `Botoform <http://botoform.com>`_ and SaltStack
 
-This project and guide provides automation for standing up a Kubernetes cluster on AWS using `Botoform <http://botoform.com>`_ and SaltStack. 
+This project and guide provides automation for standing up a Kubernetes cluster on AWS using `Botoform <http://botoform.com>`_ and SaltStack. Once the Kubernetes cluster is online, we will use it to deploy a Selenium Grid cluster.
 
 .. contents::
 
