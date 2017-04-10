@@ -10,13 +10,10 @@ This project and guide provides automation for standing up a Kubernetes cluster 
 Example
 ============
 
-In this example we use `Botoform <http://botoform.com>`_ to spin up AWS resources and provision SaltStack on the instances.
-
-When SaltStack is ready, it will install Kubernetes on the master.
+In this example we use `Botoform <http://botoform.com>`_ to spin up resources on AWS and bootstrap SaltStack on instances. When SaltStack is ready, it will automatically install Kubernetes on the master.
 
 When the Kubernetes master is ready we can spin up one or many Kubernetes minion nodes using AWS Autoscaling.
-
-When these instances report into SaltStack, it will install Kubernetes on the minions and join them to the cluster.
+The minion instances will automatically report to the Salt master, install Kubernetes, and join the to the Kubernetes cluster.
 
 Finally, when all the Kubernetes minion nodes are in the ``Ready`` state, we can use ``kubectl`` to spin up Selenium hub and chrome-nodes.
 
@@ -45,7 +42,7 @@ Finally, when all the Kubernetes minion nodes are in the ``Ready`` state, we can
   ssh-add testk8s-*
 
 
-4. In another terminal, connect to Salt/Kubernetes Master and verify it has come online properly.
+4. In another terminal, you may optionally connect to Salt/Kubernetes Master and verify it has come online properly.
 
 .. code-block:: bash
   
