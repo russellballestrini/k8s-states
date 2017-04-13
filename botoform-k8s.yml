@@ -6,6 +6,8 @@ amis:
   centos-7-hvm:
     # US East (N. Virginia)
     us-east-1: ami-2a2ab13d
+    # US East (Ohio)
+    us-east-2: ami-84f0d4e1
     # US West (Oregon)
     us-west-2: ami-a413d9c4
     # US West (N. California)
