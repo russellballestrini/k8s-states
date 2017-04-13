@@ -14,6 +14,8 @@ amis:
     us-west-1: ami-11f8bb71
     # Asia Pacific (Singapore)
     ap-southeast-1: ami-88fd24eb
+    # CN North (China Beijing)
+    cn-north-1: ami-00dc086d
 
 route_tables:
 
