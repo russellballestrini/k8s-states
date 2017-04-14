@@ -251,7 +251,7 @@ instance_roles:
   minion:
     description: Kubernetes Node
     #instance_profile_name: {{ vpc_name }}-minion
-    instance_type: 'm3.medium'
+    instance_type: 'm4.large'
     ami: 'centos-7-hvm'
     autoscaling: true
     count: {{ minion_count | default(0) }}
