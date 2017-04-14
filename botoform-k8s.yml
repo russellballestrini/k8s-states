@@ -15,7 +15,8 @@ amis:
     # Asia Pacific (Singapore)
     ap-southeast-1: ami-88fd24eb
     # CN North (China Beijing)
-    cn-north-1: ami-00dc086d
+    #cn-north-1: ami-00dc086d
+    cn-north-1: ami-3d805750
 
 route_tables:
 
@@ -190,6 +191,7 @@ instance_roles:
       #!/bin/bash
 
       # install SaltStack Master and Minion agents.
+      yum install -y wget
       wget -O - https://bootstrap.saltstack.com | sudo sh -s -- -M stable
 
       # configure salt-master agent.
@@ -265,6 +267,7 @@ instance_roles:
       #!/bin/bash
 
       # install SaltStack Minion agent.
+      yum install -y wget
       wget -O - https://bootstrap.saltstack.com | sudo sh -s -- stable
 
       # configure salt-minion agent.

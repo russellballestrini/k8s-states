@@ -1,0 +1,91 @@
+(env) REMrballestriniKBG3QC:k8s-states rballestrini$ bf --profile ihg-cn --region cn-north-1 create k8sprd botoform-k8s.yml -e 'private_zone=false, azone_count=2'
+creating vpc (k8sprd, 10.13.37.0/24) with default tenancy
+tagging vpc (Name:k8sprd)
+modifying vpc for dns support
+modifying vpc for dns hostnames
+creating internet_gateway (igw-k8sprd)
+tagging gateway (Name:igw-k8sprd)
+attaching igw to vpc (igw-k8sprd)
+creating DHCP Options Set for k8sprd
+tagging dhcp_options (Name:k8sprd)
+associating dhcp_options to k8sprd
+make sure k8sprd-master instance_profile and iam_role exist
+creating route_table (k8sprd-private-3)
+tagging route_table (Name:k8sprd-private-3)
+creating route_table (k8sprd-private-2)
+tagging route_table (Name:k8sprd-private-2)
+creating route_table (k8sprd-private-1)
+tagging route_table (Name:k8sprd-private-1)
+creating route_table (k8sprd-public)
+tagging route_table (Name:k8sprd-public)
+creating subnet 10.13.37.128/28 in cn-north-1a
+tagging subnet (Name:k8sprd-private-1)
+creating subnet 10.13.37.144/28 in cn-north-1b
+tagging subnet (Name:k8sprd-private-2)
+creating subnet 10.13.37.0/26 in cn-north-1a
+tagging subnet (Name:k8sprd-public-1)
+modifying subnet to map public IPs on instance launch (k8sprd-public-1)
+creating subnet 10.13.37.64/26 in cn-north-1b
+tagging subnet (Name:k8sprd-public-2)
+modifying subnet to map public IPs on instance launch (k8sprd-public-2)
+creating security_group k8sprd-all
+tagging security_group (Name:k8sprd-all)
+creating security_group k8sprd-bastion
+tagging security_group (Name:k8sprd-bastion)
+creating security_group k8sprd-master
+tagging security_group (Name:k8sprd-master)
+creating security_group k8sprd-minion
+tagging security_group (Name:k8sprd-minion)
+creating security_group k8sprd-minion-elb
+tagging security_group (Name:k8sprd-minion-elb)
+creating security_group k8sprd-selenium
+tagging security_group (Name:k8sprd-selenium)
+creating key pair default
+associating rt private-2 with sn private-2
+associating rt private-1 with sn private-1
+associating rt public with sn public-1
+associating rt public with sn public-2
+creating role: bastion
+1 instances of role bastion launching into k8sprd-public-1 subnet
+creating role: master
+1 instances of role master launching into k8sprd-public-1 subnet
+creating launch configuration for role: k8sprd-minion
+creating autoscaling group for role: k8sprd-minion
+inbound rule: 'bastion' -> 'all' over ports 22 (TCP)
+inbound rule: '0.0.0.0/0' -> 'bastion' over ports 22 (TCP)
+inbound rule: 'all' -> 'master' over ports 4505-4506 (TCP)
+inbound rule: 'all' -> 'master' over ports 443 (TCP)
+inbound rule: 'all' -> 'master' over ports 6443 (TCP)
+inbound rule: 'master' -> 'master' over ports 2379-2380 (TCP)
+inbound rule: 'minion' -> 'master' over ports 2379-2380 (TCP)
+inbound rule: 'minion' -> 'master' over ports 6783 (UDP)
+inbound rule: 'minion' -> 'master' over ports 6784 (UDP)
+inbound rule: 'minion' -> 'master' over ports 6783 (TCP)
+inbound rule: 'master' -> 'minion' over ports all (TCP)
+inbound rule: 'minion' -> 'minion' over ports all (TCP)
+inbound rule: 'minion-elb' -> 'minion' over ports 30000-32767 (TCP)
+inbound rule: 'minion' -> 'minion' over ports 8285 (UDP)
+inbound rule: 'minion' -> 'minion' over ports 8472 (UDP)
+inbound rule: 'minion' -> 'minion' over ports 6783 (UDP)
+inbound rule: 'minion' -> 'minion' over ports 6784 (UDP)
+inbound rule: '0.0.0.0/0' -> 'selenium' over ports 80 (TCP)
+inbound rule: '0.0.0.0/0' -> 'selenium' over ports 443 (TCP)
+creating k8sprd-selenium-hub load_balancer ...
+created k8sprd-selenium-hub load_balancer ...
+Configure Health Check for k8sprd-selenium-hub load_balancer ...
+Configured Health Check for k8sprd-selenium-hub load_balancer ...
+attaching k8sprd-selenium-hub load balancer to k8sprd-minion autoscaling group ...
+waiting for i-0967af78bc9ebf49e to start
+tagging instance i-0967af78bc9ebf49e (Name:k8sprd-master-finchlouisiana)
+tagging volumes for instance k8sprd-master-finchlouisiana (Name:k8sprd-master-finchlouisiana)
+allocating and associating eip for k8sprd-master-finchlouisiana
+associated eip 54.223.137.149 to k8sprd-master-finchlouisiana
+disable source dest check for k8sprd-master-finchlouisiana
+waiting for i-0c23b719daae866dd to start
+tagging instance i-0c23b719daae866dd (Name:k8sprd-bastion-violetvirginia)
+tagging volumes for instance k8sprd-bastion-violetvirginia (Name:k8sprd-bastion-violetvirginia)
+allocating and associating eip for k8sprd-bastion-violetvirginia
+associated eip 52.80.39.88 to k8sprd-bastion-violetvirginia
+locking new normal (not autoscaled) instances to prevent termination
+adding route ['0.0.0.0/0', 'internet_gateway'] to route_table (k8sprd-public)
+done! don't you look awesome. : )
