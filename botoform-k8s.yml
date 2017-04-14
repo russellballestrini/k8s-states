@@ -1,6 +1,6 @@
 # CIDR block to create the VPC.
-# for example, when creating new vpc, use -e 'vpc_cidr=192.168.21.0/24'
-vpc_cidr: {{ vpc_cidr }}
+# for example, when creating new vpc, use -e 'vpc_cidr=10.13.37.0/24'
+vpc_cidr: {{ vpc_cidr | default('10.13.37.0/24') }}
 
 amis:
   centos-7-hvm:
@@ -34,28 +34,18 @@ route_tables:
     routes:
       - ['0.0.0.0/0', 'internet_gateway']
 
+# set the number of azones and thus subnets. defaults to 3.
+{% set azone_count = azone_count | default(3) | int %}
+
+{% set private_subnet_names = ['private-1', 'private-2', 'private-3'][:azone_count] %}
+{% set public_subnet_names  = ['public-1', 'public-2', 'public-3'][:azone_count] %}
 
 # Three are attached to the private route_table, and three to the public.
-# size of 28 which is a /28 CIDR (16 addresses).
 # size of 26 which is a /26 CIDR (64 addresses).
+# size of 28 which is a /28 CIDR (16 addresses).
 # We round robin AZ letters if availability_zone is not defined.
 # Instances will launch into subnet with public IPs, if public is True.
 subnets:
-
-  private-1:
-    size: 28
-    route_table: private-1
-    description: private subnet 1
-
-  private-2:
-    size: 28
-    route_table: private-2
-    description: private subnet 2
-
-  private-3:
-    size: 28
-    route_table: private-3
-    description: private subnet 3
 
   public-1:
     size: 26
@@ -63,18 +53,36 @@ subnets:
     route_table: public
     description: public subnet 1
 
+  private-1:
+    size: 28
+    route_table: private-1
+    description: private subnet 1
+
+  {% if azone_count >= 2 %}
   public-2:
     size: 26
     public: true
     route_table: public
     description: public subnet 2
 
+  private-2:
+    size: 28
+    route_table: private-2
+    description: private subnet 2
+  {% endif %}
+
+  {% if azone_count >= 3 %}
   public-3:
     size: 26
     public: true
     route_table: public
     description: public subnet 3
 
+  private-3:
+    size: 28
+    route_table: private-3
+    description: private subnet 3
+  {% endif %}
 
 # DHCP Options Set
 dhcp_options:
@@ -84,7 +92,8 @@ dhcp_options:
     - AmazonProvidedDNS
     - 8.8.8.8
 
-private_zone: True
+{% set private_zone = private_zone | default(true) %}
+private_zone: {{ private_zone }}
 
 # security groups and rules.
 security_groups:
@@ -153,7 +162,7 @@ load_balancers:
   selenium-hub:
     instance_role: minion
     security_groups: ['minion-elb', 'selenium']
-    subnets: ['public-1', 'public-2', 'public-3']
+    subnets: {{ public_subnet_names }}
     listeners:
       - [80, 31337, 'tcp']
 
@@ -167,12 +176,15 @@ instance_roles:
     ami: 'centos-7-hvm'
     count: 1
     security_groups: ['all', 'master']
-    subnets: ['public-1', 'public-2', 'public-3']
+    subnets: ['public-1']
     eip: true
     source_dest_check: false
     block_devices:
       '/dev/sda1':
         size: 50
+    {% if private_zone == 'false' %}
+    private_ip_address: 10.13.37.7
+    {% endif %}
     userdata: |
       #!/bin/bash
 
@@ -188,7 +200,11 @@ instance_roles:
 
       # configure salt-minion agent.
       cat <<EOF >> /etc/salt/minion.d/custom.conf
+      {% if private_zone == 'false' %}
+      master: 10.13.37.7
+      {% else %}
       master: master
+      {% endif %}
       grains:
         role: k8s-master
       EOF
@@ -223,13 +239,13 @@ instance_roles:
 
   minion:
     description: Kubernetes Node
-    instance_profile_name: {{ vpc_name }}-minion
+    #instance_profile_name: {{ vpc_name }}-minion
     instance_type: 'm3.medium'
     ami: 'centos-7-hvm'
     autoscaling: true
     count: {{ minion_count | default(0) }}
     security_groups: ['all', 'minion']
-    subnets: ['public-1', 'public-2', 'public-3']
+    subnets: {{ public_subnet_names }}
     source_dest_check: false
     block_devices:
       '/dev/sda1':
@@ -242,7 +258,11 @@ instance_roles:
 
       # configure salt-minion agent.
       cat <<EOF >> /etc/salt/minion.d/custom.conf
+      {% if private_zone == 'false' %}
+      master: 10.13.37.7
+      {% else %}
       master: master
+      {% endif %}
       grains:
         role: k8s-minion
       EOF
@@ -259,7 +279,7 @@ instance_roles:
     ami: 'centos-7-hvm'
     count: 1
     security_groups: ['all', 'bastion']
-    subnets: ['public-1', 'public-2', 'public-3']
+    subnets: {{ public_subnet_names }}
     eip: true
     block_devices:
       '/dev/sda1':
