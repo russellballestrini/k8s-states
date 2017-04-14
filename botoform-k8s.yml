@@ -198,6 +198,10 @@ instance_roles:
       auto_accept: True
       EOF
 
+      # configure minion_id to master so we may query the master's
+      # private_ip_address from other minion nodes.
+      echo "master" > /etc/salt/minion_id
+
       # configure salt-minion agent.
       cat <<EOF >> /etc/salt/minion.d/custom.conf
       {% if private_zone == 'false' %}
