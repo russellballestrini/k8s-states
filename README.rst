@@ -65,11 +65,10 @@ Finally, when all the Kubernetes minion nodes are in the ``Ready`` state, we can
   
 .. code-block:: python
 
-  >>> evpc.autoscaling.get_related_autoscaling_group_names()
-  ['testk8s-minion']
+  >>> as_name = evpc.autoscaling.get_related_autoscaling_group_names()[0]
   >>> len(evpc.instances)
   2
-  >>> evpc.autoscaling.scale_related_autoscaling_group('testk8s-minion', 5)
+  >>> evpc.autoscaling.scale_related_autoscaling_group(as_name, 5)
   >>> len(evpc.instances)
   7
 
