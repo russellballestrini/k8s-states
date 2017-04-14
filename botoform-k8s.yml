@@ -93,6 +93,7 @@ dhcp_options:
     - 8.8.8.8
 
 {% set private_zone = private_zone | default(true) %}
+{% set master_address = master_address | default('10.13.37.7') %}
 private_zone: {{ private_zone }}
 
 # security groups and rules.
@@ -183,7 +184,7 @@ instance_roles:
       '/dev/sda1':
         size: 50
     {% if private_zone == 'false' %}
-    private_ip_address: 10.13.37.7
+    private_ip_address: {{ master_address }}
     {% endif %}
     userdata: |
       #!/bin/bash
@@ -205,7 +206,7 @@ instance_roles:
       # configure salt-minion agent.
       cat <<EOF >> /etc/salt/minion.d/custom.conf
       {% if private_zone == 'false' %}
-      master: 10.13.37.7
+      master: {{ master_address }}
       {% else %}
       master: master
       {% endif %}
@@ -219,6 +220,11 @@ instance_roles:
       # configure base salt pillar.
       mkdir -p /srv/pillar/kubernetes
       touch /srv/pillar/kubernetes/bootstrap-token.sls
+      touch /srv/pillar/kubernetes/master-address.sls
+
+      {% if private_zone == 'false' %}
+      echo "kubernetes_master_address: {{ master_address }}" > /srv/pillar/kubernetes/master-address.sls
+      {% endif %}
 
       cat <<EOF >> /srv/pillar/top.sls
       base:
@@ -226,6 +232,7 @@ instance_roles:
         'role:k8s-*':
           - match: grain
           - kubernetes.bootstrap-token
+          - kubernetes.master-address
       EOF
 
       # restart salt-master agent to re-read configuration.
