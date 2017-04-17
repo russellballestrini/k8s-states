@@ -191,8 +191,8 @@ instance_roles:
       #!/bin/bash
 
       # install SaltStack Master and Minion agents.
-      yum install -y wget
-      wget -O - https://bootstrap.saltstack.com | sudo sh -s -- -M stable
+      #wget -O - https://bootstrap.saltstack.com | sudo sh -s -- -M stable
+      curl -L https://bootstrap.saltstack.com | sudo sh -s -- -m stable
 
       # configure salt-master agent.
       # put salt master into auto accept mode.
@@ -267,8 +267,8 @@ instance_roles:
       #!/bin/bash
 
       # install SaltStack Minion agent.
-      yum install -y wget
-      wget -O - https://bootstrap.saltstack.com | sudo sh -s -- stable
+      #wget -O - https://bootstrap.saltstack.com | sudo sh -s -- stable
+      curl -L https://bootstrap.saltstack.com | sudo sh -s -- stable
 
       # configure salt-minion agent.
       cat <<EOF >> /etc/salt/minion.d/custom.conf
