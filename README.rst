@@ -101,7 +101,7 @@ Congratulations! You have built a fully functional Kubernetes cluster!
 Launch Containers
 =======================
 
-Now it is time to schedule some containers to run on our Kubernetes cluster.  In this guide we will create Selenium grid with and Internet accessible hub and private selenium chrome-nodes.
+Now it is time to schedule some containers to run on our Kubernetes cluster.  In this guide we will create Selenium grid with an Internet accessible hub and private selenium chrome-nodes.
 
 1. Launch the selenium hub:
 
