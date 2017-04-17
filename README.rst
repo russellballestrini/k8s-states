@@ -44,7 +44,7 @@ Finally, when all the Kubernetes minion nodes are in the ``Ready`` state, we can
 
 .. code-block:: bash
  
-  bf create testk8s -e 'vpc_cidr=192.168.56.0/24' $HOME/botoform-k8s.yml
+  bf create testk8s $HOME/botoform-k8s.yml
   bf dump testk8s instances
   ssh-add testk8s-*
 
@@ -116,3 +116,20 @@ When you are done with this example, or you just don't want this cluster anymore
 .. code-block:: bash
  
   bf destroy testk8s
+
+Appendix
+===========================
+
+China Region
+---------------------
+
+The `botoform-k8s.yml` template supports a few extra arguments which customize the deployment.
+
+For example the China (cn-north-1) region does not have access to Route53 and only has 2 availaibilty zones.
+We can deal with this by passing extra arguments to the `bf create` command:
+
+.. code-block:: bash
+
+ bf create testk8s -e "private_zone=false, azone_count=2" $HOME/botoform-k8s.yml
+
+
