@@ -7,6 +7,9 @@ This project and guide provides automation for standing up a Kubernetes cluster 
 
 .. contents::
 
+Diagram of infra
+===================
+
 .. image:: https://raw.githubusercontent.com/russellballestrini/k8s-states/master/selenium-grid-in-aws-on-kubernetes.png
  :width: 600
  :alt: Selenium Grid in AWS on Kubernetes
