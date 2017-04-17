@@ -192,7 +192,7 @@ instance_roles:
 
       # install SaltStack Master and Minion agents.
       #wget -O - https://bootstrap.saltstack.com | sudo sh -s -- -M stable
-      curl -L https://bootstrap.saltstack.com | sudo sh -s -- -m stable
+      curl -L https://bootstrap.saltstack.com | sudo sh -s -- -M stable
 
       # configure salt-master agent.
       # put salt master into auto accept mode.
