@@ -123,10 +123,10 @@ Appendix
 China Region
 ---------------------
 
-The `botoform-k8s.yml` template supports a few extra arguments which customize the deployment.
+The ``botoform-k8s.yml`` template supports a few extra arguments which customize the deployment.
 
 For example the China (cn-north-1) region does not have access to Route53 and only has 2 availaibilty zones.
-We can deal with this by passing extra arguments to the `bf create` command:
+We can deal with this by passing extra arguments to the ``bf create`` command:
 
 .. code-block:: bash
 
