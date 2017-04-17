@@ -103,7 +103,7 @@ Finally, when all the Kubernetes minion nodes are in the ``Ready`` state, we can
 * pull in selenium grid example from kubenetes repo
 * show commands to run on master
 
-8. Verify
+9. Verify
 
 * show how to use the ELB to access to selenium grid "hub" service
  
