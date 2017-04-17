@@ -96,16 +96,46 @@ Finally, when all the Kubernetes minion nodes are in the ``Ready`` state, we can
    # watch kubectl for new kubernetes nodes.
    watch 'kubectl get nodes'
 
+Congratulations! You have built a fully functional Kubernetes cluster!
 
-8. Launch containers (for example we show a Selenium Grid setup).
+Launch Containers
+=======================
 
-* pull in notes from selenium blog post
-* pull in selenium grid example from kubenetes repo
-* show commands to run on master
+Now it is time to schedule some containers to run on our Kubernetes cluster.  In this guide we will create Selenium grid with and Internet accessible hub and private selenium chrome-nodes.
 
-9. Verify
+1. Launch the selenium hub:
 
-* show how to use the ELB to access to selenium grid "hub" service
+.. code-block:: bash
+
+ kubectl get pods
+ kubectl run selenium-grid --image selenium/hub:2.53.1 --port 4444
+ kubectl get pods
+
+2. Expose th hub service so we may access it externally:
+
+.. code-block:: bash
+
+ kubectl get services
+ kubectl expose deployment selenium-grid --type=NodePort
+ kubectl get services
+
+3. Launch a selenium chrome-node:
+
+.. code-block:: bash
+
+ kubectl get pods
+ kubectl run selenium-node-chrome --image selenium/node-chrome:2.53.1 --env="HUB_PORT_4444_TCP_ADDR=selenium-grid" --env="HUB_PORT_4444_TCP_PORT=4444"
+ kubectl get pods
+
+4. Scale up the chrome node deployment:
+
+.. code-block:: bash
+
+ kubectl get pods
+ kubectl scale deployment selenium-node-chrome --replicas=4
+ kubectl get pods
+
+5. Use the ELB (Elastic Load Balancer) to access to selenium grid "hub" service. You should be able to access the hub by pointing your web browser to the ELB DNS record.
  
 Example Teardown
 =========================
