@@ -3,7 +3,7 @@
 /etc/yum.repos.d/kubernetes.repo:
   file.managed:
     - source: salt://kubernetes/redhat/kubernetes.repo
-    - mode: 0640
+    - mode: 0644
 
 disable-selinux:
   cmd.run:
