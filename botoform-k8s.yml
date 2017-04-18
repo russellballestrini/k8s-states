@@ -216,9 +216,6 @@ instance_roles:
         role: k8s-master
       EOF
 
-      # clone the k8s-states git repo.
-      git clone https://github.com/russellballestrini/k8s-states.git /srv/salt
-
       # configure base salt pillar.
       mkdir -p /srv/pillar/kubernetes
       touch /srv/pillar/kubernetes/bootstrap-token.sls
@@ -236,6 +233,11 @@ instance_roles:
           - kubernetes.bootstrap-token
           - kubernetes.master-address
       EOF
+
+      # clone the k8s-states git repo.
+      yum update -y
+      yum install -y git
+      git clone https://github.com/russellballestrini/k8s-states.git /srv/salt
 
       # restart salt-master agent to re-read configuration.
       service salt-master restart
