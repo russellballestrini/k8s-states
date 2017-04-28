@@ -31,12 +31,31 @@ hotifx-kubernetes-github-issue-43805:
     - mode: replace
     - require:
       - pkg: kubernetes-packages
-    - require_in:
+    - watch_in:
       - service: kubelet 
   cmd.wait:
     - name: systemctl daemon-reload
     - watch:
       - file: hotifx-kubernetes-github-issue-43805
+
+# prevent scheduling user containers on kubernetes master.
+{% if salt['grains.get']('role', '') == 'k8s-master' %}
+prevent-user-containers-on-kubernetes-master:
+  file.line:
+    - name: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+    - content: Environment="KUBELET_EXTRA_ARGS=--register-schedulable=false"
+    - match: Environment="KUBELET_EXTRA_ARGS=
+    - mode: ensure
+    - after: Environment="KUBELET_AUTHZ_ARGS=
+    - require:
+      - pkg: kubernetes-packages
+    - watch_in:
+      - service: kubelet 
+  cmd.wait:
+    - name: systemctl daemon-reload
+    - watch:
+      - file: prevent-user-containers-on-kubernetes-master
+{% endif %}
 
 # TODO: setup centos user to have access to kubectl?
 #
