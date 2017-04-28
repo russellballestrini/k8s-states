@@ -108,7 +108,7 @@ Now it is time to schedule some containers to run on our Kubernetes cluster.  In
 .. code-block:: bash
 
  kubectl get pods
- kubectl run selenium-grid --image selenium/hub:2.53.1 --port 4444
+ kubectl run selenium-hub --image selenium/hub:2.53.1 --port 4444
  kubectl get pods
 
 2. Expose th hub service so we may access it externally:
@@ -116,7 +116,7 @@ Now it is time to schedule some containers to run on our Kubernetes cluster.  In
 .. code-block:: bash
 
  kubectl get services
- kubectl expose deployment selenium-grid --type=NodePort
+ kubectl expose deployment selenium-hub --type=NodePort
  kubectl get services
 
 3. Launch a selenium chrome-node:
@@ -124,7 +124,7 @@ Now it is time to schedule some containers to run on our Kubernetes cluster.  In
 .. code-block:: bash
 
  kubectl get pods
- kubectl run selenium-node-chrome --image selenium/node-chrome:2.53.1 --env="HUB_PORT_4444_TCP_ADDR=selenium-grid" --env="HUB_PORT_4444_TCP_PORT=4444"
+ kubectl run selenium-node-chrome -f /srv/salt/kubernetes/specs/selenium-node-chrome.yaml
  kubectl get pods
 
 4. Scale up the chrome node deployment:
