@@ -124,7 +124,7 @@ Now it is time to schedule some containers to run on our Kubernetes cluster.  In
 .. code-block:: bash
 
  kubectl get pods
- kubectl create selenium-node-chrome -f /srv/salt/kubernetes/specs/selenium-node-chrome.yaml
+ kubectl create -f /srv/salt/kubernetes/specs/selenium-node-chrome.yaml
  kubectl get pods
 
 4. Scale up the chrome node deployment:
