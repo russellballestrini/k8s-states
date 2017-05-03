@@ -301,7 +301,7 @@ instance_roles:
 
   nat:
     description: Internet access provider for private subnets
-    instance_type: 't2.micro'
+    instance_type: 't2.small'
     autoscaling: true
     ami: 'centos-7-hvm'
     count: {{ nat_count | default(0) }}
