@@ -1,0 +1,14 @@
+[Unit]
+Description=Load iptable from sysconfig iptables
+
+[Service]
+# output stdout and stderr to syslog. (/var/log/messages)
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=loadiptables
+
+Type=simple
+ExecStart=/bin/bash -c "iptables-restore < /etc/sysconfig/iptables"
+
+[Install]
+WantedBy=multi-user.target

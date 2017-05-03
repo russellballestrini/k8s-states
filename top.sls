@@ -17,3 +17,8 @@ base:
   'role:k8s-master':
     - match: grain
     - kubernetes.master
+
+  # NAT Node.  
+  'role:nat':
+    - match: grain
+    - nat

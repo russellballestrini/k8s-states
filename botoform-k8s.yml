@@ -21,15 +21,16 @@ amis:
 route_tables:
 
   private-1:
-    routes: []
+    routes:
+      - ['0.0.0.0/0', 'nat']
 
   private-2:
     routes:
-    routes: []
+      - ['0.0.0.0/0', 'nat']
 
   private-3:
     routes:
-    routes: []
+      - ['0.0.0.0/0', 'nat']
 
   public:
     routes:
@@ -103,6 +104,16 @@ security_groups:
   all:
     inbound:
       - ['bastion',   'tcp',   22]
+
+  nat:
+    inbound:
+      # allow subnets in VPC to ping the NAT hosts.
+      - ['all',      'icmp',   -1]
+      # allow subnets in VPC to get NTP time via the NAT hosts.
+      - ['all',      'udp',    123]
+      # allow subnets in VPC to http/https via the NAT hosts.
+      - ['all',      'tcp',    80]
+      - ['all',      'tcp',    443]
 
   # reference:
   #   https://coreos.com/kubernetes/docs/latest/kubernetes-networking.html#port-allocation
@@ -260,8 +271,7 @@ instance_roles:
     autoscaling: true
     count: {{ minion_count | default(0) }}
     security_groups: ['all', 'minion']
-    subnets: {{ public_subnet_names }}
-    eip: true
+    subnets: {{ private_subnet_names }}
     source_dest_check: false
     block_devices:
       '/dev/sda1':
@@ -270,7 +280,6 @@ instance_roles:
       #!/bin/bash
 
       # install SaltStack Minion agent.
-      #wget -O - https://bootstrap.saltstack.com | sh -s -- stable
       curl -L https://bootstrap.saltstack.com | sh -s -- stable
 
       # configure salt-minion agent.
@@ -288,6 +297,42 @@ instance_roles:
       service salt-minion restart
 
       # Setup Kubernetes Minion Node using SaltStack.
+      salt-call state.highstate
+
+  nat:
+    description: Internet access provider for private subnets
+    instance_type: 't2.micro'
+    autoscaling: true
+    ami: 'centos-7-hvm'
+    count: {{ nat_count | default(0) }}
+    security_groups: ['all', 'nat']
+    subnets: {{ public_subnet_names }}
+    eip: true
+    source_dest_check: false
+    block_devices:
+      '/dev/sda1':
+        size: 30
+    userdata: |
+      #!/bin/bash
+
+      # install SaltStack Minion agent.
+      curl -L https://bootstrap.saltstack.com | sh -s -- stable
+
+      # configure salt-minion agent.
+      cat <<EOF >> /etc/salt/minion.d/custom.conf
+      {% if private_zone == 'false' %}
+      master: 10.13.37.7
+      {% else %}
+      master: master
+      {% endif %}
+      grains:
+        role: nat
+      EOF
+
+      # restart salt-minion agent to re-read configuration.
+      service salt-minion restart
+
+      # Setup Role using SaltStack.
       salt-call state.highstate
 
   bastion:
