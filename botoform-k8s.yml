@@ -304,7 +304,7 @@ instance_roles:
     instance_type: 't2.small'
     autoscaling: true
     ami: 'centos-7-hvm'
-    count: {{ nat_count | default(3) }}
+    count: {{ azone_count }}
     security_groups: ['all', 'nat']
     subnets: {{ public_subnet_names }}
     eip: true
