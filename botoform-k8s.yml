@@ -261,6 +261,7 @@ instance_roles:
     count: {{ minion_count | default(0) }}
     security_groups: ['all', 'minion']
     subnets: {{ public_subnet_names }}
+    eip: true
     source_dest_check: false
     block_devices:
       '/dev/sda1':
