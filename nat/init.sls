@@ -32,7 +32,7 @@ iptables service:
 
   service.running:
     - name: iptables
-    - enabled: True
+    - enable: True
     - watch:
       - file: /etc/systemd/system/iptables.service
       - file: /etc/sysconfig/iptables
