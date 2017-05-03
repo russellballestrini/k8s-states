@@ -9,7 +9,7 @@ sysctl-nat:
     - group: root
     - mode: 0644
     - watch_in:
-      - cmd.wait: sysctl-nat
+      - cmd: sysctl-nat
 
   cmd.wait:
     - name: sysctl --system
@@ -34,6 +34,6 @@ iptables service:
     - name: iptables
     - enabled: True
     - watch:
-      - file.manage: /etc/systemd/system/iptables.service
-      - file.manage: /etc/sysconfig/iptables
-      - file.manage: /etc/sysctl.d/10-nat.conf 
+      - file: /etc/systemd/system/iptables.service
+      - file: /etc/sysconfig/iptables
+      - file: /etc/sysctl.d/10-nat.conf 
