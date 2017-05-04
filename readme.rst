@@ -103,7 +103,7 @@ Congratulations! You have built a fully functional Kubernetes cluster!
 Launch Containers
 =======================
 
-Now it is time to schedule some containers to run on our Kubernetes cluster.  In this guide we will create Selenium grid with an Internet accessible hub and private selenium chrome-nodes.
+Now it is time to schedule some containers to run on our Kubernetes cluster.  In this guide we will create Selenium grid with an Internet accessible hub and private selenium chrome-nodes. As you can see we pin the version selenium when we specify the official community supported docker image to use. Note that both the hub and the nodes need to be pinned to the same Selenium version in order to communicate properly with each other.  The Chrome node is pinned in the kubernetes spec file located in ``kubernetes/specs/selenium-node-chrome.yaml``.
 
 These commands should be run on the Kubernetes master as the root user. To get to the Kubernetes master connect to the bastion and then hop to the master.
 
