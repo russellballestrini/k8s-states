@@ -46,6 +46,8 @@ Finally, when all the Kubernetes minion nodes are in the ``Ready`` state, we can
  
   bf create testk8s $HOME/botoform-k8s.yml
   bf dump testk8s instances
+
+  # add the newly created SSH private key to your ssh-agent.
   ssh-add testk8s-*
 
 
@@ -102,6 +104,8 @@ Launch Containers
 =======================
 
 Now it is time to schedule some containers to run on our Kubernetes cluster.  In this guide we will create Selenium grid with an Internet accessible hub and private selenium chrome-nodes.
+
+These commands should be run on the Kubernetes master as the root user. To get to the Kubernetes master connect to the bastion and then hop to the master.
 
 1. Launch the selenium hub:
 
