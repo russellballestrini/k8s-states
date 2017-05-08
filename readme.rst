@@ -109,23 +109,17 @@ In this example we pin Selenium to version ``2.53.1`` when we specify the offici
 
 These commands should be run on the Kubernetes master as the root user. To get to the Kubernetes master connect to the bastion and then hop to the master.
 
-1. Launch the selenium hub:
+1. Launch the selenium hub (and expose hub service for external access):
 
 .. code-block:: bash
 
  kubectl get pods
- kubectl run selenium-hub --image selenium/hub:2.53.1 --port 4444
+ kubectl get services
+ kubectl create -f /srv/salt/kubernetes/specs/selenium-hub.yaml
  kubectl get pods
-
-2. Expose th hub service so we may access it externally:
-
-.. code-block:: bash
-
- kubectl get services
- kubectl expose deployment selenium-hub --type=NodePort
  kubectl get services
 
-3. Launch a selenium chrome-node:
+2. Launch a selenium chrome-node:
 
 .. code-block:: bash
 
@@ -133,7 +127,7 @@ These commands should be run on the Kubernetes master as the root user. To get t
  kubectl create -f /srv/salt/kubernetes/specs/selenium-node-chrome.yaml
  kubectl get pods
 
-4. Scale up the chrome node deployment:
+3. Scale up the chrome node deployment:
 
 .. code-block:: bash
 
