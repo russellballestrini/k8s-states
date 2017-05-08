@@ -127,6 +127,9 @@ security_groups:
       - ['all', 'tcp',   443]
       - ['all', 'tcp',   6443]
 
+      # older kubernetes version<=1.5 had a discovery port, version>=1.6 uses API port.
+      - ['all', 'tcp',   9898]
+
       # etcd.
       - ['master', 'tcp',   '2379-2380']
       - ['minion', 'tcp',   '2379-2380']
