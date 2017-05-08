@@ -105,7 +105,7 @@ Launch Containers
 
 Now it is time to schedule some containers to run on our Kubernetes cluster.  In this guide we will create Selenium grid with an Internet accessible hub and private selenium chrome-nodes. 
 
-In this example we pin Selenium to version ``2.53.1`` when we specify the official community supported docker image. Both the Selenium hub and nodes must be pinned to the same Selenium version to ensure proper communication. We pin the Chrome nodes in the kubernetes spec file located in ``kubernetes/specs/selenium-node-chrome.yaml``.
+In this example we pin Selenium to version ``2.53.1`` when we specify the official community supported docker image. Both the Selenium hub and nodes must be pinned to the same Selenium version to ensure proper communication. We pin the selenium version in the kubernetes spec files located in ``kubernetes/specs``.
 
 These commands should be run on the Kubernetes master as the root user. To get to the Kubernetes master connect to the bastion and then hop to the master.
 
@@ -135,7 +135,8 @@ These commands should be run on the Kubernetes master as the root user. To get t
  kubectl scale deployment selenium-node-chrome --replicas=4
  kubectl get pods
 
-5. Use the ELB (Elastic Load Balancer) to access to selenium grid "hub" service. You should be able to access the hub by pointing your web browser to the ELB DNS record.
+4. Use the ELB (Elastic Load Balancer) to access to selenium grid "hub" service.
+You should be able to access the hub by pointing your web browser to the ELB DNS record.
  
 Example Teardown
 =========================
